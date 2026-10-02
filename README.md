@@ -25,7 +25,7 @@ Links
 <!-- 아래 URL을 실제 링크로 교체하세요. -->
 
 <p align="center">
-  <a href="YOUTUBE_URL">
+  <a href="https://youtu.be/fEdRaGwxEiA?si=bLkoLXke_ZfEJ4T2">
     <img src="https://img.shields.io/badge/YouTube-시연영상-red?style=for-the-badge&logo=youtube&logoColor=white"/>
   </a>
   &nbsp;
@@ -313,9 +313,7 @@ flowchart LR
     closed --> production[프로덕션]
 ```
 - main : 배포 기준
-- release : Android 빌드와 스토어 배포 준비
 - develop : 기능 통합과 테스트
-- feature/* : 기능 단위 작업
 Commit 메시지 규칙
 - Feat : 새로운 기능 추가
 - Fix : 버그 수정
@@ -330,13 +328,10 @@ Commit 메시지 규칙
 - Rename : 파일 또는 폴더 이름 변경과 이동
 - Remove : 파일 삭제
 프로젝트 폴더 관리
-- 0.Scripts : Core, Player, Enemy, Boss, UI, Service 스크립트
-- 1.Prefabs : 캐릭터, 적, VFX, UI 프리팹
-- 2.Scenes : 로비와 스테이지 씬
-- 3.Animations : 캐릭터와 적 애니메이션
-- 4.Materials : 머티리얼과 셰이더 리소스
-- 5.Audio : BGM과 SFX 리소스
-- 6.ScriptableObjects : CharacterData, EnemyData, AugmentData
+- Scripts : Core, Player, Enemy, Boss, UI, Service 스크립트
+- Prefabs : 캐릭터, 적, VFX, UI 프리팹
+- Scenes : 로비와 스테이지 씬
+- ScriptableObjects : CharacterData, EnemyData, AugmentData
 - AddressableAssetsData : Addressables 그룹과 라벨 설정
 <div align="center">
 
