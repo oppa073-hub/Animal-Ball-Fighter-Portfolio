@@ -227,9 +227,19 @@ public class PlayerBallController : MonoBehaviour
 
         if (collision.collider.CompareTag("Wall"))
         {
-            SoundManager.Instance?.PlaySFX(SoundId.EnemyHit);
+            if (CombatFeedbackManager.Instance != null)
+            {
+                CombatFeedbackManager.Instance.RequestSfx(SoundId.EnemyHit, priority: 0);
+            }
+            else
+            {
+                SoundManager.Instance?.PlaySFX(SoundId.EnemyHit);
+            }
+
             float randomAngle = UnityEngine.Random.Range(-18f, 18f);
+
             Quaternion randomRotation = Quaternion.Euler(0f, randomAngle, 0f);
+
             rb.linearVelocity = randomRotation * rb.linearVelocity; //벽과 충돌 시 약간의 랜덤한 방향으로 이동
         }
         if (collision.collider.CompareTag("Enemy"))
@@ -247,7 +257,7 @@ public class PlayerBallController : MonoBehaviour
                 damageMultiplier *= playerStats.CriticalDamage;
             }
 
-            int dealtDamage = DamageManager.Instance.ApplyDamage(collision.gameObject, playerStats.Attack, currentSpeed, textType, damageMultiplier, true, isCritical ? 0.15f : 0f, isCritical ? 0.25f : 0f);
+            int dealtDamage = DamageManager.Instance.ApplyDamage(collision.gameObject,playerStats.Attack, currentSpeed, textType, damageMultiplier, true);
 
             playerStats.ApplyLifeSteal(dealtDamage, health);
 

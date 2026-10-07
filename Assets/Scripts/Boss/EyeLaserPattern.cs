@@ -241,14 +241,7 @@ public class EyeLaserPattern : BossPattern
 
             if (Physics.SphereCast(fireOrigin, laserHitRadius, direction, out RaycastHit hit, laserRange, targetLayer))
             {
-                DamageManager.Instance.ApplyFixedDamage(
-                    hit.collider.gameObject,
-                    damage,
-                    DamageTextType.Normal,
-                    true,
-                    0.2f,
-                    0.35f
-                );
+                DamageManager.Instance.ApplyFixedDamage(hit.collider.gameObject, damage, DamageTextType.Normal);
 
                 playerDamaged = true;
             }

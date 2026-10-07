@@ -85,7 +85,7 @@ public class MissileWarningPattern : BossPattern
 
             if (hits.Length > 0)
             {
-                DamageManager.Instance.ApplyFixedDamage(hits[0].gameObject,damage, DamageTextType.Normal, true, 0.2f, 0.35f);
+                DamageManager.Instance.ApplyFixedDamage(hits[0].gameObject, damage, DamageTextType.Normal);
                 if (statusEffectOnHit != null)
                 {
                     hits[0].GetComponent<StatusEffectReceiver>()?.ApplyStatus(statusEffectOnHit);

@@ -26,7 +26,7 @@ public class StatusEffectHandler : MonoBehaviour
                     _ => DamageTextType.Normal
                 };
 
-                DamageManager.Instance.ApplyFixedDamage(gameObject, effect.data.damagePerTick, textType, false, 0f,0f, false);
+                DamageManager.Instance.ApplyFixedDamage(gameObject, effect.data.damagePerTick, textType, false, false);
 
                 if (!activeEffects.Contains(effect))
                 {

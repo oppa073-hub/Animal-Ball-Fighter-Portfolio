@@ -19,8 +19,6 @@ public class CameraShake : MonoBehaviour
 
     public void Shake(float duration, float strength)
     {
-        Debug.Log($"Shake : {strength}");
-
         transform.DOKill();
         transform.DOShakePosition(duration, strength);
     }

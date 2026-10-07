@@ -28,17 +28,27 @@ public class PigChargeSkill : MonoBehaviour, ISkill
     }
     private void LateUpdate()
     {
-        if (activeChargeVfx == null || !activeChargeVfx.activeSelf) return;
+        UpdateChargeVfxDirection();
+    }
+
+    private void UpdateChargeVfxDirection()
+    {
+        if (activeChargeVfx == null || !activeChargeVfx.activeSelf)
+            return;
 
         Vector3 direction = rb.linearVelocity;
         direction.y = 0f;
 
-        if (direction.sqrMagnitude < 0.01f) return;
+        if (direction.sqrMagnitude < 0.01f)
+            return;
 
-        Quaternion directionRotation = Quaternion.LookRotation(direction.normalized, Vector3.up);
+        Quaternion directionRotation =
+            Quaternion.LookRotation(direction.normalized, Vector3.up);
 
-        activeChargeVfx.transform.rotation = directionRotation * Quaternion.Euler(vfxRotationOffset);
+        activeChargeVfx.transform.rotation =
+            directionRotation * Quaternion.Euler(vfxRotationOffset);
     }
+
     public void UseSkill()
     {
         if (chargeCoroutine != null) StopCoroutine(chargeCoroutine);
@@ -69,7 +79,6 @@ public class PigChargeSkill : MonoBehaviour, ISkill
 
         activeChargeVfx = null;
         chargeCoroutine = null;
-
         Debug.Log("[PigSkill] 돌진 종료");
     }
 

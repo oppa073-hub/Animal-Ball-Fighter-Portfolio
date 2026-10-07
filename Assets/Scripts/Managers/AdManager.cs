@@ -18,7 +18,8 @@ public class AdManager : MonoBehaviour
     private const string PrivacyConsentKey = "AdsPrivacyConsent";
     private bool initializationStarted;
     private bool isShowingRewardedAd;
-
+    private bool showAfterLoad;
+    private bool isRewardedAdLoading;
     public bool HasSavedPrivacyConsent => PlayerPrefs.HasKey(PrivacyConsentKey);
 
     public bool SavedPrivacyConsent => PlayerPrefs.GetInt(PrivacyConsentKey, 0) == 1;
@@ -164,6 +165,11 @@ public class AdManager : MonoBehaviour
             return;
         }
 
+
+        if (isRewardedAdLoading || rewardedAd.IsAdReady()) return;
+
+        isRewardedAdLoading = true;
+
         Debug.Log("[Ads] Rewarded 광고 로드 요청");
 
         rewardedAd.LoadAd();
@@ -177,25 +183,39 @@ public class AdManager : MonoBehaviour
             return;
         }
 
+        pendingRewardAction = rewardAction;
+        showAfterLoad = true;
+
         if (rewardedAd == null)
         {
-            Debug.LogWarning("[Ads] 광고 SDK가 아직 초기화되지 않았습니다.");
+            Debug.LogWarning("[Ads] SDK 초기화 대기 또는 재시도");
+
+            if (!initializationStarted && HasSavedPrivacyConsent)
+            {
+                ApplyPrivacyConsent(SavedPrivacyConsent, false);
+            }
+
             return;
         }
 
         if (!rewardedAd.IsAdReady())
         {
-            Debug.LogWarning("[Ads] 아직 광고가 준비되지 않았습니다.");
-
-            rewardedAd.LoadAd();
+            Debug.LogWarning("[Ads] 광고 로드 대기");
+            LoadRewardedAd();
             return;
         }
 
-        pendingRewardAction = rewardAction;
+        ShowLoadedRewardedAd();
+    }
+    private void ShowLoadedRewardedAd()
+    {
+        if (rewardedAd == null || !rewardedAd.IsAdReady()) return;
+
+        showAfterLoad = false;
+        isShowingRewardedAd = true;
 
         Debug.Log("[Ads] Rewarded 광고 표시 요청");
 
-        isShowingRewardedAd = true;
         rewardedAd.ShowAd();
     }
 
@@ -211,11 +231,20 @@ public class AdManager : MonoBehaviour
 
     private void OnRewardedLoaded(LevelPlayAdInfo adInfo)
     {
+        isRewardedAdLoading = false;
         Debug.Log($"[Ads] Rewarded 광고 로드 완료: {adInfo}");
+
+        if (!showAfterLoad || pendingRewardAction == null) return;
+
+        showAfterLoad = false;
+        ShowLoadedRewardedAd();
     }
 
     private void OnRewardedLoadFailed(LevelPlayAdError error)
     {
+        isRewardedAdLoading = false;
+        showAfterLoad = false;
+        pendingRewardAction = null;
         Debug.LogError($"[Ads] Rewarded 광고 로드 실패: {error}");
     }
 
@@ -227,10 +256,12 @@ public class AdManager : MonoBehaviour
     private void OnRewardedDisplayFailed(LevelPlayAdInfo adInfo, LevelPlayAdError error)
     {
         Debug.LogError($"[Ads] Rewarded 광고 표시 실패: {error}");
-        isShowingRewardedAd = false;
 
+        isShowingRewardedAd = false;
+        showAfterLoad = false;
         pendingRewardAction = null;
-        rewardedAd.LoadAd();
+
+        LoadRewardedAd();
     }
 
     private void OnRewarded(LevelPlayAdInfo adInfo, LevelPlayReward reward)
@@ -253,10 +284,10 @@ public class AdManager : MonoBehaviour
     {
         Debug.Log("[Ads] Rewarded 광고 닫힘");
         isShowingRewardedAd = false;
-
+        showAfterLoad = false;
         // 보상 이벤트 없이 닫혔을 경우
         // 이전 콜백이 남는 것을 방지
-        rewardedAd?.LoadAd();
+        LoadRewardedAd();
     }
 
     private void OnRewardedClicked(LevelPlayAdInfo adInfo)

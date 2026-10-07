@@ -4,8 +4,15 @@ using UnityEngine;
 public class DamageManager : MonoBehaviour
 {
     public static DamageManager Instance { get; private set; }
+
+    [Header("Effects")]
     [SerializeField] private GameObject hitEffectPrefab;
     [SerializeField] private GameObject shieldBreakEffectPrefab;
+
+    [Header("Critical Feedback")]
+    [SerializeField] private float criticalShakeDuration = 0.15f;
+    [SerializeField] private float criticalShakeStrength = 0.25f;
+
     private void Awake()
     {
         if (Instance == null)
@@ -18,24 +25,26 @@ public class DamageManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
     private void PlayHitEffect(Vector3 position)
     {
-        if (hitEffectPrefab != null)
-        {
-            ObjectPoolManager.Instance.GetObject(hitEffectPrefab, position, Quaternion.identity);
-        }
+        if (hitEffectPrefab == null)
+            return;
+
+        ObjectPoolManager.Instance?.GetObject(hitEffectPrefab, position, Quaternion.identity);
     }
+
     public void PlayShieldBreakEffect(Vector3 position)
     {
         if (shieldBreakEffectPrefab == null) return;
+
         if (ObjectPoolManager.Instance == null) return;
 
-        GameObject effectObject =ObjectPoolManager.Instance.GetObject(shieldBreakEffectPrefab,position,Quaternion.identity);
+        GameObject effectObject = ObjectPoolManager.Instance.GetObject(shieldBreakEffectPrefab, position, Quaternion.identity);
 
         if (effectObject == null)
         {
             Debug.LogWarning("[Shield] 파괴 이펙트 풀 부족");
-
             return;
         }
 
@@ -53,14 +62,15 @@ public class DamageManager : MonoBehaviour
         effectController.Play(position);
     }
 
-    public int ApplyDamage(GameObject target, float attack, float currentSpeed, DamageTextType type, float damageMultiplier = 1f, bool showHitFlash = true, float shakeDuration = 0f, float shakeStrength = 0f)
+    public int ApplyDamage(GameObject target, float attack, float currentSpeed, DamageTextType type, float damageMultiplier = 1f, bool showHitFlash = true)
     {
-        var health = target.GetComponent<Health>();
+        Health health = target.GetComponent<Health>();
 
         if (health == null) return 0;
 
         int damage = CalculateCollisionDamage(attack, currentSpeed);
-        damage = Mathf.RoundToInt(damage * damageMultiplier);  //크리틱컬 적용
+
+        damage = Mathf.RoundToInt(damage * damageMultiplier);
 
         PlayerShield shield = target.GetComponent<PlayerShield>();
 
@@ -71,6 +81,7 @@ public class DamageManager : MonoBehaviour
         }
 
         health.TakeDamage(damage);
+
         PlayHitEffect(target.transform.position + Vector3.up * 0.5f);
 
         if (showHitFlash)
@@ -78,19 +89,20 @@ public class DamageManager : MonoBehaviour
             target.GetComponent<HitFlash>()?.Flash();
         }
 
-        if (shakeDuration > 0f && shakeStrength > 0f)
-        {
-            CameraShake.Instance?.Shake(shakeDuration, shakeStrength);
-        }
+        bool isCritical =type == DamageTextType.Critical;
 
+        RequestCollisionFeedback(isCritical);
 
-        DamageTextManager.Instance.ShowDamage(damage,target.transform.position + Vector3.up * 1f, type);
+        DamageTextManager.Instance.ShowDamage(damage, target.transform.position + Vector3.up, type);
+
         return damage;
     }
-    public int ApplyFixedDamage(GameObject target, float damage, DamageTextType type, bool showHitFlash = true, float shakeDuration = 0f, float shakeStrength = 0f, bool showHitEffect = true)
+
+    public int ApplyFixedDamage(GameObject target, float damage, DamageTextType type, bool showHitFlash = true, bool showHitEffect = true)
     {
         Health health = target.GetComponent<Health>();
-        if (health == null) return 0;
+
+        if (health == null)return 0;
 
         int finalDamage = Mathf.RoundToInt(damage);
 
@@ -99,6 +111,7 @@ public class DamageManager : MonoBehaviour
         if (shield != null && shield.TryAbsorbDamage(finalDamage))
         {
             Debug.Log($"[Shield] 피해 {finalDamage} 흡수");
+
             return 0;
         }
 
@@ -114,16 +127,39 @@ public class DamageManager : MonoBehaviour
             target.GetComponent<HitFlash>()?.Flash();
         }
 
-        if (shakeDuration > 0f && shakeStrength > 0f)
-        {
-            CameraShake.Instance?.Shake(shakeDuration, shakeStrength);
-        }
+        // 고정 피해에는 카메라 흔들림을 적용하지 않는다.
+        DamageTextManager.Instance.ShowDamage(finalDamage, target.transform.position + Vector3.up, type);
 
-        DamageTextManager.Instance.ShowDamage( finalDamage,target.transform.position + Vector3.up,type);
         return finalDamage;
     }
+
+    private void RequestCollisionFeedback(bool isCritical)
+    {
+        if (CombatFeedbackManager.Instance != null)
+        {
+            if (isCritical)
+            {
+                CombatFeedbackManager.Instance.RequestImpact(SoundId.EnemyHit, criticalShakeDuration, criticalShakeStrength, priority: 10);
+            }
+            else
+            {
+                CombatFeedbackManager.Instance.RequestSfx(SoundId.EnemyHit, priority: 5);
+            }
+
+            return;
+        }
+
+        // 매니저가 없는 씬을 위한 안전장치
+        SoundManager.Instance?.PlaySFX(SoundId.EnemyHit);
+
+        if (isCritical)
+        {
+            CameraShake.Instance?.Shake(criticalShakeDuration, criticalShakeStrength);
+        }
+    }
+
     public int CalculateCollisionDamage(float attack, float currentSpeed)
     {
-        return (int)Math.Round((attack * 0.6) + (currentSpeed * 0.8));
+        return (int)Math.Round((attack * 0.6f) + (currentSpeed * 0.8f));
     }
 }

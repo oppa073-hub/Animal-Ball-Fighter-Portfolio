@@ -97,20 +97,27 @@ public class EnemyBallController : MonoBehaviour
 
         if (collision.collider.CompareTag("Wall"))
         {
-            SoundManager.Instance?.PlaySFX(SoundId.EnemyHit);
+            if (CombatFeedbackManager.Instance != null)
+            {
+                CombatFeedbackManager.Instance.RequestSfx(SoundId.EnemyHit, priority: 0);
+            }
+            else
+            {
+                SoundManager.Instance?.PlaySFX(SoundId.EnemyHit);
+            }
+
             float randomAngle = Random.Range(-18f, 18f);
             Quaternion randomRotation = Quaternion.Euler(0f, randomAngle, 0f);
             rb.linearVelocity = randomRotation * rb.linearVelocity; //벽과 충돌 시 약간의 랜덤한 방향으로 이동
         }
+
         if (collision.collider.CompareTag("Player"))
         {
             animationController?.PlayMeleeAttack();
 
-            SoundManager.Instance?.PlaySFX(SoundId.EnemyHit);
-
             float currentSpeed = rb.linearVelocity.magnitude;
 
-            DamageManager.Instance.ApplyDamage(collision.gameObject, enemyController.Attack, currentSpeed, DamageTextType.Normal, 1f, true, 0f, 0f); //플레이어에게 데미지 적용
+            DamageManager.Instance.ApplyDamage(collision.gameObject, enemyController.Attack, currentSpeed, DamageTextType.Normal, 1f, true);
 
             if (enemyController.StatusEffectOnHit != null)
             {
