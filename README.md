@@ -14,7 +14,7 @@
 </p>
 
 <p>
-  <a href="https://youtu.be/fEdRaGwxEiA?si=bLkoLXke_ZfEJ4T2">
+  <a href="https://www.youtube.com/watch?v=03Gv5E2kXkA">
     <img src="https://img.shields.io/badge/YouTube-시연 영상-red?style=for-the-badge&logo=youtube&logoColor=white" />
   </a>
   &nbsp;
