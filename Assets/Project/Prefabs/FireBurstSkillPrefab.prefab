@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4118880854164120954
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 276694984072886514}
+  - component: {fileID: 5526128464363428758}
+  m_Layer: 0
+  m_Name: FireBurstSkillPrefab
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &276694984072886514
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4118880854164120954}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5526128464363428758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4118880854164120954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aac7c0942cc5abc45aac8d7ca3a041e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FireBurstAugmentSkill
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  baseDamage: 30
+  baseRange: 3
+  damageIncreaseAfterLevel5: 12
+  explosionVfxPrefab: {fileID: 868468853075218060, guid: 6c0e2ea3d9659784bad0f7b76ee08899, type: 3}
+  vfxDuration: 1
+  vfxOffset: {x: 0, y: 0, z: 0}
+  damageUpgradeText:
+    m_TableReference:
+      m_TableCollectionName: GUID:625cd51adfd82e647b80f92cfa20311d
+    m_TableEntryReference:
+      m_KeyId: 325004338413568
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  rangeUpgradeText:
+    m_TableReference:
+      m_TableCollectionName: GUID:625cd51adfd82e647b80f92cfa20311d
+    m_TableEntryReference:
+      m_KeyId: 325040065495040
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  cooldownUpgradeText:
+    m_TableReference:
+      m_TableCollectionName: GUID:625cd51adfd82e647b80f92cfa20311d
+    m_TableEntryReference:
+      m_KeyId: 325276787818496
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  damageRangeUpgradeText:
+    m_TableReference:
+      m_TableCollectionName: GUID:625cd51adfd82e647b80f92cfa20311d
+    m_TableEntryReference:
+      m_KeyId: 325075956154368
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

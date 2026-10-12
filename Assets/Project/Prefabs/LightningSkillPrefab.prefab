@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4030916294394476094
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5764054552989771448}
+  - component: {fileID: 1344151932004790755}
+  m_Layer: 0
+  m_Name: LightningSkillPrefab
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5764054552989771448
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4030916294394476094}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1344151932004790755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4030916294394476094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 045791bb80f4b7949976458767ff2568, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LightningAugmentSkill
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  attackRange: 10
+  baseDamage: 20
+  damageIncreaseAfterLevel5: 10
+  lightningVfxPrefab: {fileID: 6130567110401474471, guid: 2346e2e78b606f24198dc68919370a40, type: 3}
+  vfxDuration: 1
+  vfxOffset: {x: 0, y: 0, z: 0}
+  vfxRotationOffset: {x: 0, y: 0, z: 0}
+  damageUpgradeText:
+    m_TableReference:
+      m_TableCollectionName: GUID:625cd51adfd82e647b80f92cfa20311d
+    m_TableEntryReference:
+      m_KeyId: 325177747718144
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  targetUpgradeText:
+    m_TableReference:
+      m_TableCollectionName: GUID:625cd51adfd82e647b80f92cfa20311d
+    m_TableEntryReference:
+      m_KeyId: 325199851700224
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  cooldownUpgradeText:
+    m_TableReference:
+      m_TableCollectionName: GUID:625cd51adfd82e647b80f92cfa20311d
+    m_TableEntryReference:
+      m_KeyId: 325276787818496
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  damageTargetUpgradeText:
+    m_TableReference:
+      m_TableCollectionName: GUID:625cd51adfd82e647b80f92cfa20311d
+    m_TableEntryReference:
+      m_KeyId: 325236400865280
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

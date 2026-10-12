@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2783115596457198213
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6919884215520328632}
+  - component: {fileID: 4301189923080350328}
+  m_Layer: 8
+  m_Name: CatScratchSkillPrefab
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6919884215520328632
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2783115596457198213}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4301189923080350328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2783115596457198213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4c098c1af35a454581a18fc4c0b3b35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CatScratchSkill
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  scratchVfxPrefab: {fileID: 2642749838293771946, guid: 1e4a7160d9d435b458b32b9b02ca82dd, type: 3}
+  vfxPoint: {fileID: 6919884215520328632}
+  vfxDuration: 1
+  vfxRotationOffset: {x: 90, y: 90, z: 0}
+  baseDamageBonus: 0.3
+  comboInterval: 0.12
+  ultimateRangeBonus: 0.2
+  clawMaterial: {fileID: 2100000, guid: d73e5de9258b8a64ea00859c932e3154, type: 2}
+  clawTrailMaterial: {fileID: 2100000, guid: 35340242dc900e742b2ddc3282021f3f, type: 2}
+  clawColor: {r: 1, g: 0.85, b: 0.95, a: 1}
+  clawSpeed: 14
+  clawLifeTime: 0.9
+  clawDamageRatio: 0.8

@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2984375492087094839
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7908997089107118392}
+  - component: {fileID: 1535519121719143481}
+  m_Layer: 0
+  m_Name: PigChargeSkillPrefab
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7908997089107118392
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2984375492087094839}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1535519121719143481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2984375492087094839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49a7b2898009f4a4c8f52faf12bf2b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PigChargeSkill
+  duration: 1.5
+  speedMultiplier: 20
+  collisionDamageMultiplier: 1.5
+  chargeVfxPrefab: {fileID: 4735854018667895495, guid: c25cba9fccb56344ba86e01368b5a4dc, type: 3}
+  vfxPoint: {fileID: 7908997089107118392}
+  vfxRotationOffset: {x: 0, y: 0, z: 0}
+  baseDurationBonus: 0.7
+  armoredDamageMultiplier: 2.2
+  ultimateDamageMultiplier: 3
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  shockwaveVfxPrefab: {fileID: 8584265374633801674, guid: bef7a71d3105ef24fbc1d05acd0bacf3, type: 3}
+  shockwaveRadius: 2.3
+  shockwaveInterval: 0.35

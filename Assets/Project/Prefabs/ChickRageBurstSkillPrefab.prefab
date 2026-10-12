@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3100989210193305213
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 994817406972058641}
+  - component: {fileID: 4791652342863603631}
+  m_Layer: 0
+  m_Name: ChickRageBurstSkillPrefab
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &994817406972058641
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3100989210193305213}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4791652342863603631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3100989210193305213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd79c4a8d81487747b0fad7e30793cb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChickWingSkill
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  wingVfxPrefab: {fileID: 868468853075218060, guid: c29ea6bc24877764c9685ae6c931f65c, type: 3}
+  vfxPoint: {fileID: 994817406972058641}
+  vfxDuration: 1
+  vfxRotationOffset: {x: 0, y: 0, z: 0}
+  baseDamageBonus: 0.3
+  wideRangeBonus: 0.4
+  ultimateRangeBonus: 1
+  ultimateDamageMultiplier: 2
+  ultimateKnockback: 14
+  burstInterval: 0.35
+  featherMaterial: {fileID: 2100000, guid: d73e5de9258b8a64ea00859c932e3154, type: 2}
+  featherTrailMaterial: {fileID: 2100000, guid: 35340242dc900e742b2ddc3282021f3f, type: 2}
+  featherColor: {r: 1, g: 0.92, b: 0.45, a: 1}
+  featherSpeed: 12
+  featherLifeTime: 1
+  featherDamageRatio: 0.6

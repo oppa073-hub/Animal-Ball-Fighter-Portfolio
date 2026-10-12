@@ -1,340 +1,460 @@
 <div align="center">
 
-ANIMAL BALL FIGHTER
-한 번의 드래그로 캐릭터를 발사하고
-충돌, 스킬, 증강을 조합해 방을 돌파하는
-3D 물리 기반 모바일 로그라이크 액션 게임
-</div>
+# ANIMAL BALL FIGHTER
 
-프로젝트 소개
-Animal Ball Fighter는 캐릭터를 드래그해 발사한 뒤
-벽과 적에게 튕기며 전투하는 세로형 Android 게임입니다.
-플레이어는 캐릭터마다 다른 스킬을 활용하고,
-전투 보상으로 제시되는 증강을 선택해 능력치를 강화하며
-3개 스테이지, 총 15개의 방을 순서대로 돌파합니다.
-전투 구현뿐 아니라 Addressables 기반 콘텐츠 로딩,
-모바일 최적화, 보상형 광고, 결제 검증, 개인정보 동의와 다국어 설정까지
-하나의 앱 흐름으로 연결하는 것을 목표로 개발했습니다.
-<!--
-<p align="center">
-  <img width="847" alt="Animal Ball Fighter 메인 플레이 화면" src="MAIN_IMAGE_URL" />
+한 번의 드래그로 캐릭터를 발사하고  
+충돌·스킬·증강을 조합해 방을 돌파하는  
+**3D 물리 기반 모바일 로그라이크 액션 게임**
+
+<p>
+  <img src="https://img.shields.io/badge/Unity-6000.3.5f2-000000?style=flat-square&logo=unity&logoColor=white" />
+  <img src="https://img.shields.io/badge/Platform-Android-3DDC84?style=flat-square&logo=android&logoColor=white" />
+  <img src="https://img.shields.io/badge/Version-0.2.0-4C8BF5?style=flat-square" />
+  <img src="https://img.shields.io/badge/Development-Solo-orange?style=flat-square" />
 </p>
--->
 
-Links
-<!-- 아래 URL을 실제 링크로 교체하세요. -->
-
-<p align="center">
+<p>
   <a href="https://youtu.be/fEdRaGwxEiA?si=bLkoLXke_ZfEJ4T2">
-    <img src="https://img.shields.io/badge/YouTube-시연영상-red?style=for-the-badge&logo=youtube&logoColor=white"/>
+    <img src="https://img.shields.io/badge/YouTube-시연 영상-red?style=for-the-badge&logo=youtube&logoColor=white" />
   </a>
   &nbsp;
-  <a href="GOOGLE_PLAY_URL">
-    <img src="https://img.shields.io/badge/Google_Play-스토어-414141?style=for-the-badge&logo=googleplay&logoColor=white"/>
+  <a href="https://play.google.com/store/apps/details?id=com.oppa073.animalballfighter">
+    <img src="https://img.shields.io/badge/Google_Play-스토어-414141?style=for-the-badge&logo=googleplay&logoColor=white" />
   </a>
 </p>
 
-개발 정보
-- 엔진 : Unity 6000.3.5f2
-- 언어 : C#
-- 형태 : 개인 포트폴리오 프로젝트
-- 플랫폼 : Android
-- 빌드 환경 : IL2CPP / ARM64
-- 개발 기간 : 2026.06.19 ~ 2026.10
-- 개발 인원 : 1명
-- 배포 상태 : Google Play 비공개 테스트 완료 / 프로덕션 액세스 검토 중
-- 핵심 구현 :
-  - 드래그 발사와 충돌 기반 물리 전투
-  - ScriptableObject 기반 캐릭터, 증강, 적 데이터 관리
-  - Addressables 라벨 로딩과 전투 준비 동기화
-  - 동일 프레임 충돌 피드백 요청 병합
-  - LevelPlay 보상형 광고와 부활 상태 복구
-  - Unity IAP 거래 ID 기반 중복 지급 차단
-  - 개인정보 동의 저장과 한국어 / 영어 전환
-플레이 흐름
-```mermaid
-flowchart LR
-    A[LOBBY<br/>캐릭터 선택] --> B[LOAD<br/>씬과 데이터 로드]
-    B --> C[READY<br/>전투 준비 확인]
-    C --> D[BATTLE<br/>룸 전투]
-    D --> E[REWARD<br/>증강 또는 부활]
-    E -->|다음 방| C
-    E -->|클리어 또는 게임 오버| A
-```
-- 캐릭터 선택 후 전투 씬과 Addressables 데이터를 비동기로 불러옵니다.
-- 씬, 적 데이터, 오브젝트 풀이 모두 준비된 뒤 전투를 시작합니다.
-- 일반, 정예, 이벤트, 보스 방을 진행하며 증강을 선택합니다.
-- 게임 오버 시 보상형 광고를 통해 플레이당 한 번 부활할 수 있습니다.
-주요 기능
-1. 드래그 발사와 충돌 전투
-드래그 거리와 카메라 방향을 기준으로 발사 방향과 힘을 계산하고,
-충돌 시 공격력과 현재 속도를 함께 사용해 피해량을 결정합니다.
-```mermaid
-flowchart LR
-    A[드래그 입력<br/>30 ~ 300] --> B[카메라 기준<br/>월드 방향 변환]
-    B --> C[발사력 보간<br/>최대 22]
-    C --> D[AddForce<br/>Impulse]
-    D --> E[충돌 피해 계산]
-    E --> F[반사 각도 보정<br/>±18도]
-```
-Damage = Attack × 0.6 + Speed × 0.8
-- 발사 강도는 첫 충격량에 반영하고 이후 속도는 캐릭터 능력치에 맞춰 유지합니다.
-- 벽과 적 충돌 후 진행 각도를 ±18도 보정해 모서리 반복 반사를 줄였습니다.
-- 이동 속도가 0.1 미만이면 마지막 진행 방향을 기준으로 움직임을 복구합니다.
-- 치명타 여부에 따라 피해 텍스트와 카메라 피드백을 구분합니다.
-<!--
-<p align="center">
-  <img width="800" alt="드래그 발사와 충돌 전투" src="PHYSICS_COMBAT_GIF_URL" />
-</p>
--->
+</div>
 
-2. 데이터 기반 캐릭터와 증강
-캐릭터, 증강, 적 정보를 ScriptableObject로 분리해
-씬 코드의 직접 참조를 줄이고 콘텐츠를 데이터 단위로 관리했습니다.
-```mermaid
-flowchart LR
-    A[CharacterData<br/>HP · ATK · SPEED · Skill] --> B[PlayerCharacterSetup<br/>모델과 스킬 조립]
-    B --> C[ISkill<br/>스킬 공통 규격]
+<!-- v0.2.0 시연 영상을 YouTube에 올린 뒤 위 YouTube URL을 새 링크로 교체하세요. -->
 
-    D[AugmentData<br/>Type · Value · Rarity] --> E[AugmentManager<br/>후보 3개 생성]
-    E --> F[PlayerStats<br/>능력치 또는 스킬 강화]
-```
-- 캐릭터별 능력치와 스킬 리소스를 CharacterData에서 관리합니다.
-- 고양이, 돼지, 병아리 캐릭터의 스킬을 ISkill 규격으로 교체할 수 있게 구성했습니다.
-- 증강 후보는 중복을 제거한 뒤 무작위 3개를 제시합니다.
-- 이미 보유한 스킬 증강이 다시 선택되면 스킬 레벨을 올립니다.
-<!--
-<p align="center">
-  <img width="800" alt="캐릭터 선택과 증강 화면" src="CHARACTER_AUGMENT_IMAGE_URL" />
-</p>
--->
+---
 
-3. 룸과 보스 진행
-각 스테이지는 5개의 방으로 구성되며
-RoomManager와 BossController가 전투 진행과 보스 패턴 실행을 담당합니다.
-```mermaid
-flowchart LR
-    R1[1 NORMAL] --> R2[2 NORMAL]
-    R2 --> R3[3 ELITE]
-    R3 --> R4[4 NORMAL]
-    R4 --> R5[5 BOSS]
-```
-- 총 3개 스테이지, 15개 방을 순서대로 진행합니다.
-- 일반, 정예, 보스 적 데이터를 분리해 방 종류에 맞게 생성합니다.
-- 보스 패턴은 준비, 실행, 종료 상태를 나눠 중복 실행을 막습니다.
-- 경고선, 미사일 범위, 레이저 판정으로 공격 범위를 사전에 전달합니다.
-4. Addressables 콘텐츠 로딩
-씬이 개별 콘텐츠 목록을 직접 보유하지 않고
-역할별 라벨을 요청해 런타임 목록을 구성하도록 만들었습니다.
-- 관리 콘텐츠 : 17개
-- Addressables 라벨 : 4개
-  - Augment
-  - EnemyData_Normal
-  - EnemyData_Elite
-  - EnemyData_Boss
-```mermaid
-flowchart LR
-    A[역할 라벨 요청] --> B[LoadAssetsAsync]
-    B --> C[상태와 개수 검증]
-    C --> D[런타임 목록 구성]
-    D --> E[오브젝트 풀 등록]
-```
-전투 준비 동기화
-```mermaid
-flowchart LR
-    S1[씬 비동기 로드] --> S2[씬 활성화]
-    S2 --> G[READY GATE]
+## 프로젝트 소개
 
-    D1[적 데이터 라벨 로드] --> D2[데이터 검증]
-    D2 --> D3[풀 등록 완료]
-    D3 --> G
+**Animal Ball Fighter**는 캐릭터를 드래그해 발사한 뒤 벽과 적에게 튕기며 전투하는 세로형 Android 게임입니다.
 
-    G --> B[전투 시작]
-```
-- 씬과 데이터가 모두 준비된 뒤에만 전투를 시작합니다.
-- 준비 시간이 10초를 넘거나 데이터가 비어 있으면 전투를 차단하고 로비로 복귀합니다.
-- 씬 종료 시 유효한 Addressables Handle을 해제합니다.
-<!--
-<p align="center">
-  <img width="800" alt="Addressables 로딩과 전투 준비" src="ADDRESSABLES_IMAGE_URL" />
-</p>
--->
+캐릭터별 고유 스킬과 전투 중 획득하는 증강을 조합하고, 매 방 이후 제시되는 경로를 선택해 보스까지 진행합니다. 일반 스테이지 외에도 장기 성장과 기록 경쟁을 위한 무한 모드를 제공합니다.
 
-5. 로딩 진행률 구성
-씬 로드가 끝난 뒤에도 데이터 초기화가 이어지는 점을 고려해
-진행률을 실제 준비 단계에 맞춰 세 구간으로 나눴습니다.
-구간	처리 내용
-0 ~ 90%	씬 비동기 로드
-90 ~ 95%	씬 초기화와 전투 준비 확인
-95 ~ 100%	로딩 화면 Fade Out
+게임플레이 구현에 그치지 않고 다음 기능을 하나의 모바일 앱 흐름으로 연결했습니다.
 
-
-- 최소 노출 시간을 적용해 화면이 순간적으로 깜빡이지 않도록 했습니다.
-- 데이터 초기화 구간을 표시해 진행률이 멈춘 것처럼 보이는 문제를 줄였습니다.
-- Fade Out 완료 후 전투 UI로 자연스럽게 전환합니다.
-6. 충돌 피드백 요청 병합
-기존에는 충돌 이벤트마다 효과음과 카메라 흔들림을 바로 실행했습니다.
-개선 후에는 전투 코드가 CombatFeedbackManager에 요청만 전달하고,
-매니저가 같은 프레임의 요청을 정리한 뒤 제한된 주기로 실행합니다.
-```mermaid
-flowchart LR
-    A[충돌 감지] --> B[효과음 또는 흔들림 요청]
-    B --> C[같은 프레임 요청 병합]
-    C --> D[가장 높은 우선순위 보관]
-    D --> E[SFX 0.08초 간격]
-    D --> F[Shake 0.12초 간격]
-```
-- 같은 프레임의 효과음은 최대 한 번만 실행합니다.
-- 카메라 흔들림은 치명타 충돌에서만 요청합니다.
-- 겹친 흔들림은 가장 긴 시간과 가장 높은 강도를 남깁니다.
-Profiler 비교
-동일 프레임에 충돌 피드백 요청 24회를 발생시키는
-동일한 Unity Editor 스트레스 조건의 선택 프레임을 비교했습니다.
-항목	개선 전	개선 후
-PlayerLoop	31.60 ms	2.31 ms
-GC Alloc	75.2 KB	368 B
-Audio Voices	197	5
-Total Audio CPU	1.0%	0.3%
-
+- Addressables 기반 콘텐츠 로드와 전투 시작 동기화
+- 로컬 저장과 기존 사용자 데이터 호환
+- Unity Gaming Services 기반 원격 밸런스·분석·랭킹
+- LevelPlay 보상형 광고와 광고 부활
+- Unity IAP 거래 ID 기반 중복 지급 차단
+- 개인정보 동의, 한국어·영어 전환, Safe Area 대응
+- Google Play 정식 출시와 후속 업데이트
 
 <!--
 <p align="center">
-  <img width="800" alt="Unity Profiler 개선 전후 비교" src="PROFILER_COMPARISON_IMAGE_URL" />
+  <img width="850" alt="Animal Ball Fighter 메인 플레이" src="docs/images/main_gameplay.png" />
 </p>
 -->
 
-7. LevelPlay 보상형 광고와 부활
-게임 로직은 광고를 직접 제어하지 않고 AdManager에 요청만 전달합니다.
-개인정보 동의, 초기화, 로드, 표시, 보상과 실패 처리는
-AdManager가 한 곳에서 관리합니다.
+---
+
+## 개발 정보
+
+| 항목 | 내용 |
+|---|---|
+| 엔진 | Unity 6000.3.5f2 / URP |
+| 언어 | C# |
+| 플랫폼 | Android 세로 화면 |
+| 빌드 | IL2CPP / ARM64 / AAB |
+| 개발 형태 | 개인 포트폴리오 프로젝트 / 1인 개발 |
+| 개발 기간 | 2026.06.19 ~ 2026.09 초기 개발, 2026.10 v0.2.0 후속 개발 |
+| 현재 버전 | 0.2.0 |
+| 배포 | Google Play 정식 출시 |
+
+### 주요 패키지
+
+| 패키지 | 버전 | 용도 |
+|---|---:|---|
+| Addressables | 2.8.1 | 적·증강 데이터 라벨 로드 |
+| Localization | 1.5.13 | 한국어·영어 String Table |
+| LevelPlay | 9.5.1 | 보상형 광고 |
+| Unity IAP | 5.4.2 | 상품 조회·구매 검증 |
+| Authentication | 3.8.0 | UGS 익명 인증 |
+| Analytics | 6.3.0 | 동의 기반 플레이 이벤트 기록 |
+| Leaderboards | 2.3.4 | 무한 모드 최고 기록 |
+| Remote Config | 4.2.5 | 앱 업데이트 없는 밸런스 조정 |
+
+---
+
+## v0.2.0 업데이트
+
+정식 출시 후 직접 확인한 장기 플레이 문제와 첫 사용자 경험을 요구사항으로 다시 정의했습니다.
+
+| 문제 | 적용한 변경 | 확인 기준 |
+|---|---|---|
+| 증강이 반복될수록 스탯이 지수적으로 증가 | 기본 스탯 기준 누적합과 능력치별 상한 적용 | 반복 선택 시 증가량이 일정한지 확인 |
+| 무한 모드 후반 난이도가 낮아짐 | 30방 이후 적 HP·ATK 복리 성장 | 30~50방 이후 난이도 곡선 플레이 확인 |
+| 한 판의 선택 폭이 부족함 | 시작 축복, 경로 선택, 상점·휴식·이벤트, 승천 추가 | 각 경로 진입과 런 종료 시 상태 초기화 |
+| 신규 사용자가 조작을 알기 어려움 | 행동 완료를 기준으로 진행되는 전투 튜토리얼 추가 | 발사·대시·퍼펙트·스킬 이벤트 확인 |
+| 기기 비율에 따라 UI가 잘림 | Safe Area와 9:16 기준 폭 제한 | Galaxy Z Flip6 포함 세로 화면 확인 |
+| 운영 기능이 로컬에 한정됨 | UGS 원격 설정·분석·랭킹 연결 | 네트워크 실패 시에도 로컬 진행 유지 |
+
+추가된 주요 콘텐츠:
+
+- 네 번째 캐릭터 **토끼**와 캐릭터별 분기형 스킬 트리
+- 무한 모드, 승천 난이도, 시작 축복과 런 골드
+- 일반·엘리트·상점·모닥불·이벤트 경로 선택
+- 일일 출석과 날짜 기반 일일 미션 3종
+- 적 도감, 엘리트 특성, 특수 역할 적
+- 퍼펙트 반사, 대시 조준, 뱅크샷과 전투 콤보
+- 화면 흔들림·섬광 감소, 진동 설정과 햅틱 피드백
+- 개발용 증강 강제 선택·시작 방·능력치 Override 도구
+
+---
+
+## 핵심 문제 해결: 무한 모드 스탯 오버플로
+
+### 문제
+
+기존에는 증강을 선택할 때마다 **이미 증가한 현재값에 다시 비율을 곱했습니다.** 일반 스테이지에서는 선택 횟수가 적어 드러나지 않았지만, 방마다 증강이 쌓이는 무한 모드에서는 스탯이 폭발적으로 증가했습니다.
+
+```csharp
+// 이전 방식
+Attack *= 1f + value;
+MaxHp = Mathf.RoundToInt(MaxHp * (1f + value));
+```
+
+공격력 +15% 증강을 반복 선택했을 때의 차이입니다.
+
+| 선택 횟수 | 이전: 현재값 기준 곱연산 | 개선: 기본값 기준 누적합 |
+|---:|---:|---:|
+| 5회 | 약 2.0배 | 1.75배 |
+| 10회 | 약 4.0배 | 2.5배 |
+| 20회 | 약 16배 | 4.0배 |
+| 40회 | 약 268배 | 7.0배 |
+
+체력은 결국 `int` 최댓값을 넘어 오버플로가 발생했고, 체력 UI와 회복 계산까지 함께 깨졌습니다. 반면 적은 선형으로만 성장해 장기 플레이가 오히려 쉬워지는 문제도 있었습니다.
+
+### 개선
+
+```csharp
+// 개선 방식
+attackPercentSum += value;
+Attack = Mathf.Min(baseAttack * (1f + attackPercentSum), MaxStatValue);
+```
+
+- 공격력·최대 체력·스킬 피해를 시작 스탯 기준 누적합으로 변경
+- 체력 계산과 회복 과정에 Clamp와 안전 상한 적용
+- 치명타 확률 100%, 흡혈 30%, 방 클리어 회복 50% 등 효과별 상한 적용
+- 플레이어 주요 스탯 안전 상한 1억 적용
+- 무한 모드 30방 이후 적 HP는 방마다 ×1.05, ATK는 ×1.03 복리 성장
+- 적 최대 체력 상한 10억 적용
+
 ```mermaid
 flowchart LR
-    A[개인정보 동의] --> B[SDK 초기화]
-    B --> C[광고 로드]
-    C --> D[Ready 확인]
-    D --> E[광고 표시]
-    E --> F[Reward · Close · Fail 처리]
+    A[장기 플레이 증상] --> B[증강 반복 조건 재현]
+    B --> C[현재값 곱연산 확인]
+    C --> D[기본값 기준 누적합]
+    D --> E[효과별 상한 적용]
+    E --> F[적 성장 곡선 재설계]
 ```
-- 광고가 준비되지 않았으면 로드를 요청하고 완료 후 표시합니다.
-- 중복 로드와 중복 표시를 상태값으로 차단합니다.
-- 보상 콜백을 받은 경우에만 골드 또는 부활 처리를 실행합니다.
-- 광고 종료 후 다음 요청을 위해 새 광고를 로드합니다.
-부활 상태 복구
+
+완료된 정적 안전 검사와 Unity 컴파일 확인, 이후 필요한 장기 난이도 플레이 검증을 분리해 관리했습니다.
+
+---
+
+## 플레이 흐름
+
 ```mermaid
-flowchart LR
-    A[GAME OVER] --> B[HP 50% 복구]
-    B --> C[플레이어 위치 · 속도 · 상태이상 초기화]
-    C --> D[적 상태 준비]
-    D --> E[GameState Ready 전환]
-    E --> F[전투 HUD 재활성화]
+flowchart TD
+    A[로비에서 캐릭터·스테이지 선택] --> B[씬과 Addressables 데이터 로드]
+    B --> C[READY GATE]
+    C --> D[룸 전투]
+    D --> E[증강 또는 특수 방 보상]
+    E --> F{다음 경로}
+    F -->|일반·엘리트| D
+    F -->|상점·모닥불·이벤트| E
+    F -->|5번째 방| G[보스 전투]
+    G --> H[보상·해금·저장]
 ```
-- HP만 회복하지 않고 플레이어, 적, 게임 상태와 UI를 정해진 순서로 복구합니다.
-- 보상형 광고 부활은 플레이당 한 번만 사용할 수 있습니다.
-- Unity Editor Mock 광고와 Android 실기기 광고를 각각 확인했습니다.
-<!--
-<p align="center">
-  <img width="800" alt="LevelPlay 보상형 광고와 부활" src="REWARDED_AD_IMAGE_URL" />
-</p>
--->
 
-8. Unity IAP 중복 지급 차단
-구매 성공 시 골드와 거래 ID를 함께 저장하고,
-같은 거래 ID가 다시 전달되면 보상을 지급하지 않도록 구성했습니다.
-```mermaid
-flowchart LR
-    A[상품 ID 확인] --> B[거래 ID 중복 검사]
-    B -->|신규 거래| C[5,000G와 거래 ID 저장]
-    C --> D[Save]
-    D --> E[구매 확정]
-    B -->|기존 거래| F[지급 중단]
-```
-- Unity Services 초기화 후 Store에 연결합니다.
-- gold_5000 상품을 조회해 현지 가격을 표시합니다.
-- 저장이 완료된 뒤 구매를 확정해 재실행 시 중복 지급을 막습니다.
-Unity IAP 기능은 구현과 Android 실기기 결제 테스트를 완료했지만,
-사업자 등록 및 정산 계정 준비 문제로 정식 출시 빌드에서는 제외했습니다.
+- 3개 스테이지를 진행하며 각 스테이지의 5번째 방에서 보스와 전투합니다.
+- 전투 후 일반·엘리트·상점·모닥불·이벤트 중 다음 경로를 선택합니다.
+- 무한 모드는 방을 반복하며 최고 도달 방과 누적 골드를 별도로 관리합니다.
+- 한 판의 런 골드·증강은 `RunState`, 영구 골드·해금·기록은 `PlayerSaveData`로 분리합니다.
 
-9. 개인정보 동의와 다국어 설정
-광고 동의와 언어 설정을 저장해
-씬이 바뀌거나 앱을 다시 실행해도 같은 선택을 유지합니다.
-개인정보 동의
-- 첫 실행 시 저장된 선택을 확인합니다.
-- 동의와 거부를 모두 제공합니다.
-- 선택 결과를 PlayerPrefs에 저장합니다.
-- LevelPlay 초기화 전에 GDPR 동의값을 전달합니다.
-- 설정 화면에서 개인정보 선택창을 다시 열 수 있습니다.
-한국어 / 영어 전환
-- Localization 초기화가 끝날 때까지 기다립니다.
-- 저장된 언어를 SelectedLocale에 적용합니다.
-- LocaleChanged 이벤트에서 현재 화면을 갱신합니다.
-- 씬 전환 후에도 선택한 언어를 유지합니다.
-<!--
-<p align="center">
-  <img width="800" alt="개인정보 동의와 다국어 설정" src="PRIVACY_LOCALE_IMAGE_URL" />
-</p>
--->
+---
 
-앱 구조
-플레이 흐름은 한 방향으로 유지하고,
-비동기 콘텐츠 준비와 외부 SDK 처리는 전담 관리자로 분리했습니다.
+## 클라이언트 구조
+
 ```mermaid
 flowchart TB
-    A[MainLobby] --> B[Loading / Ready]
-    B --> C[Stage / Room / Boss]
-    C --> D[Reward / Save]
-
-    E[Addressables<br/>EnemySpawner · AugmentManager] --> B
-    F[전투 수명주기<br/>StageController · RoomManager · ObjectPool] --> C
-    G[모바일 서비스<br/>AdManager · IAPManager · Save · Locale] --> D
+    A[Presentation<br/>UI · Input · Tutorial · SafeArea] --> B[Game Loop<br/>GameState · RoomManager · RunFlow]
+    B --> C[Content / Data<br/>ScriptableObject · Addressables]
+    B --> D[Scene Lifecycle<br/>Loading · Ready · Stage]
+    B --> E[Services<br/>Save · UGS · Ads · IAP · Localization]
+    F[Editor Only<br/>Debug Window · Unity MCP] -. 개발 지원 .-> B
 ```
-AI 활용 개발 과정
-ChatGPT와 Codex를 구조 검토와 디버깅 보조 도구로 사용했습니다.
-AI가 제시한 결과를 그대로 적용하지 않고, 프로젝트 규칙에 맞게 수정한 뒤
-Unity 실행 결과, Profiler 수치와 Android 실기기 테스트를 기준으로 최종 결정했습니다.
+
+- **Presentation**: 드래그 입력, HUD, 튜토리얼, 모바일 화면 대응
+- **Game Loop**: 룸 진행, 전투 상태, 보상과 다음 경로 결정
+- **Content / Data**: 캐릭터·적·증강·상태이상 데이터를 에셋으로 관리
+- **Services**: 저장, 온라인 서비스, 광고, 결제, 다국어 처리
+- **Editor Only**: 반복 테스트와 AI Agent 연동 도구를 Player 빌드에서 분리
+
+---
+
+## 주요 구현
+
+### 1. 드래그 발사와 물리 충돌
+
+드래그 입력을 카메라 기준의 월드 방향으로 변환하고 당긴 거리에 비례한 힘을 `Rigidbody`에 적용합니다.
+
 ```mermaid
 flowchart LR
-    A[목표와 조건 정의] --> B[AI로 구조 · 코드 · 테스트 후보 비교]
-    B --> C[직접 수정하고 프로젝트에 통합]
-    C --> D[Unity · Profiler · Android 검증]
-    D -->|문제 발생| A
+    A[드래그 입력] --> B[월드 방향 변환]
+    B --> C[발사력 보간]
+    C --> D[AddForce · Impulse]
+    D --> E[충돌 피해]
 ```
-- CombatFeedbackManager 요청 병합 구조 비교
-- LevelPlay 초기화, 로드, 보상 콜백 흐름 점검
-- Profiler A/B 조건과 Android 실기기 테스트 항목 구성
-브랜치 전략
+
+$$Damage = Attack \times 0.6 + Speed \times 0.8$$
+
+- 충돌 당시 공격력과 속도를 함께 사용해 피해 계산
+- 벽과 적 충돌 후 Y축 기준 ±18° 각도 보정
+- 이동이 멈추면 마지막 진행 방향을 기준으로 상태 복구
+- SphereCast 기반 퍼펙트 반사 예측과 다음 충돌 배율 적용
+- 길게 눌러 시간을 멈춘 뒤 방향을 지정하는 대시 조준
+
+<!--
+<p align="center">
+  <img width="800" alt="드래그 발사와 물리 전투" src="docs/images/physics_combat.gif" />
+</p>
+-->
+
+### 2. 데이터 기반 캐릭터·적·증강
+
+캐릭터, 적, 증강과 상태이상 정보를 `ScriptableObject`로 분리하고 실행 로직은 인터페이스와 런타임 클래스로 확장합니다.
+
 ```mermaid
 flowchart LR
-    feature[feature/*<br/>기능 단위 작업] --> develop[develop<br/>통합 개발]
-    develop --> release[release<br/>배포 준비]
-    release --> main[main<br/>배포 기준]
-
-    main --> internal[내부 테스트]
-    internal --> closed[비공개 테스트]
-    closed --> production[프로덕션]
+    A[CharacterData] --> B[PlayerCharacterSetup]
+    B --> C[ISkill]
+    D[AugmentData] --> E[AugmentManager]
+    E --> F[PlayerStats]
+    G[EnemyData] --> H[EnemySpawner]
 ```
-- main : 배포 기준
-- develop : 기능 통합과 테스트
-Commit 메시지 규칙
-- Feat : 새로운 기능 추가
-- Fix : 버그 수정
-- Design : UI 디자인 변경
-- HOTFIX : 치명적인 오류 긴급 수정
-- Comment : 주석 추가 또는 변경
-- Docs : 문서 수정
-- Style : 코드 동작에 영향을 주지 않는 형식 수정
-- Refactor : 코드 리팩토링
-- Test : 테스트 코드 또는 테스트 기능 추가와 수정
-- Chore : 빌드 설정과 패키지 수정
-- Rename : 파일 또는 폴더 이름 변경과 이동
-- Remove : 파일 삭제
-프로젝트 폴더 관리
-- Scripts : Core, Player, Enemy, Boss, UI, Service 스크립트
-- Prefabs : 캐릭터, 적, VFX, UI 프리팹
-- Scenes : 로비와 스테이지 씬
-- ScriptableObjects : CharacterData, EnemyData, AugmentData
-- AddressableAssetsData : Addressables 그룹과 라벨 설정
+
+- 고양이·돼지·병아리·토끼의 고유 스킬을 `ISkill` 규격으로 연결
+- 증강 후보에서 중복 불가 항목을 제외한 뒤 세 가지를 무작위 제시
+- 보유한 증강 스킬이 다시 선택되면 독립 레벨 증가
+- `BossPattern` 컴포넌트 단위로 보스의 경고·실행·종료 흐름 분리
+- `StatusEffectData`와 `StatusEffectHandler`로 지속 피해와 VFX 관리
+
+### 3. Addressables 로드와 전투 시작 조건
+
+씬 활성화와 콘텐츠 데이터 준비를 별도로 진행하고, 두 조건이 모두 끝났을 때만 전투를 시작합니다.
+
+```mermaid
+flowchart TD
+    A[씬 비동기 로드] --> B[씬 활성화]
+    C[Normal · Elite · Boss 라벨 로드] --> D[상태·개수 검증]
+    D --> E[오브젝트 풀 등록]
+    B --> F[READY GATE]
+    E --> F
+    F --> G[전투 시작]
+```
+
+- 역할별 Addressables 라벨로 런타임 적 목록 구성
+- 로드 상태와 데이터 개수를 검증한 뒤 오브젝트 풀 등록
+- 준비 시간이 10초를 넘거나 필수 데이터가 비어 있으면 전투 차단
+- 씬 종료 시 유효한 Addressables Handle 해제
+- 로딩 진행률을 씬 로드 0~90%, 준비 확인 90~95%, Fade Out 95~100%로 분리
+
+### 4. 반복 충돌 피드백 요청 병합
+
+전투 코드는 효과음을 직접 실행하지 않고 `CombatFeedbackManager`에 요청만 전달합니다. 매니저는 같은 프레임의 요청을 정리하고 제한된 주기로 대표 요청만 실행합니다.
+
+```mermaid
+flowchart LR
+    A[충돌 이벤트] --> B[피드백 요청]
+    B --> C[같은 프레임 병합]
+    C --> D[우선순위 SFX 선택]
+    C --> E[가장 강한 Shake 선택]
+    D --> F[0.08초 간격 실행]
+    E --> G[0.12초 간격 실행]
+```
+
+- 같은 프레임의 효과음은 우선순위가 가장 높은 요청만 보관
+- 카메라 흔들림은 치명타 충돌에서만 요청
+- 겹친 흔들림은 가장 긴 시간과 가장 높은 강도를 유지
+- `LateUpdate`에서 실행 후 요청 버퍼 초기화
+
+동일 프레임에 피드백 요청 24회를 발생시킨 Unity Editor 스트레스 조건의 선택 프레임 비교입니다.
+
+| 항목 | 개선 전 | 개선 후 |
+|---|---:|---:|
+| PlayerLoop | 31.60 ms | 2.31 ms |
+| GC Alloc | 75.2 KB | 368 B |
+| Audio Voices | 197 | 5 |
+| Total Audio CPU | 1.0% | 0.3% |
+
+> 위 수치는 실기기 평균 FPS가 아니라 동일한 Unity Editor 스트레스 조건의 선택 프레임 비교입니다.
+
+### 5. Unity Gaming Services
+
+온라인 기능은 게임을 확장하지만, 초기화나 네트워크 실패가 로컬 전투를 막지 않도록 구성했습니다.
+
+| 서비스 | 구현 내용 | 실패 시 처리 |
+|---|---|---|
+| Authentication | 익명 로그인과 닉네임 동기화 | 로컬 플레이 유지 |
+| Remote Config | 일반 적·보스 HP, 보스 쿨타임, 골드 배율 | 캐시 또는 기본값 1 사용 |
+| Analytics | 개인정보 동의 후 플레이 이벤트 기록 | 이벤트만 생략 |
+| Leaderboards | 무한 모드 최고 기록 등록·조회 | 로컬 최고 기록 유지 |
+
+Remote Config 값은 `PlayerPrefs`에 캐시하고 0.25~4배 범위로 보정해 잘못된 원격 값이 게임을 무너뜨리지 않게 했습니다.
+
+### 6. 보상형 광고와 부활 상태 복구
+
+```mermaid
+flowchart LR
+    A[광고 요청] --> B[Ready 확인]
+    B --> C[광고 표시]
+    C --> D[보상 콜백]
+    D --> E[HP 50% 복구]
+    E --> F[Player · Enemy · HUD 복구]
+```
+
+- 개인정보 동의값을 LevelPlay 초기화 전에 전달
+- 중복 로드·중복 표시를 상태값으로 차단
+- 보상 콜백을 받은 경우에만 골드 또는 부활 실행
+- 부활 시 HP뿐 아니라 위치·속도·상태이상·적 상태·게임 상태·HUD를 순서대로 복구
+- 광고 부활은 한 플레이당 한 번만 허용
+
+### 7. Unity IAP 중복 지급 차단
+
+```mermaid
+flowchart LR
+    A[PendingOrder] --> B[상품 ID 확인]
+    B --> C[Transaction ID 검사]
+    C -->|신규| D[골드 + ID 저장]
+    D --> E[구매 확정]
+    C -->|처리 완료| F[재지급 차단]
+```
+
+- 상품 ID와 거래 ID를 함께 검증
+- 골드와 처리한 거래 ID를 같은 저장 데이터에 기록
+- 저장 완료 후 구매 확정
+- 동일 거래 콜백이 다시 들어오면 골드를 지급하지 않고 구매만 확정
+
+Unity IAP 구현과 Android 실기기 결제 테스트는 완료했지만, 사업자 등록과 정산 계정 준비 문제로 정식 출시 빌드에서는 판매 기능을 제외했습니다.
+
+### 8. 개인정보·다국어·모바일 UX
+
+- 동의와 거부를 모두 제공하고 결과를 `PlayerPrefs`에 저장
+- GDPR 동의 전달 이후에만 광고 SDK 초기화
+- Analytics도 같은 동의 상태가 `Granted`일 때만 이벤트 기록
+- Unity Localization의 `SelectedLocale`과 `LocaleChanged`로 한국어·영어 UI 갱신
+- `Screen.safeArea`와 9:16 기준 폭 제한으로 노치·긴 화면·태블릿 대응
+- 화면 흔들림, 섬광 감소, 진동 설정 저장
+- Android 햅틱 강도를 전투 이벤트에 따라 구분
+
+---
+
+## AI Agent 활용과 검증
+
+0.2.0 후반 작업에서 **Claude Code·Codex·Unity MCP**를 코드 탐색과 반복 구현을 가속하는 보조 도구로 사용했습니다. 초기 게임 전체를 AI로 만든 것이 아니며, 요구사항과 아키텍처 결정·Diff 승인·Unity 검증·배포 판단은 직접 수행했습니다.
+
+```mermaid
+flowchart LR
+    A[목표·제약·완료 조건] --> B[Agent 변경안]
+    B --> C[Diff와 영향 범위 검토]
+    C --> D[Unity 컴파일·플레이 테스트]
+    D --> E[실기기·배포 판단]
+    D -->|문제 발견| A
+```
+
+`CLAUDE.md`에 출시 프로젝트의 변경 금지 규칙과 검증 순서를 명시했습니다.
+
+- `PlayerSaveData`의 기존 필드명과 타입은 변경하지 않고 필드 추가만 허용
+- 광고·IAP·개인정보 동의 코드는 명시적 요청 없이 수정 금지
+- Addressables 라벨 문자열과 콘텐츠 식별자 변경 금지
+- 변경 전 계획 작성, 변경 후 라이브 안전 검사와 Unity 검증
+- Unity 전처리 심볼이 빠지는 `dotnet build` 대신 Unity Editor에서 컴파일 확인
+
+Unity MCP와 개발용 DLL은 `IFilterBuildAssemblies`와 빌드 후처리로 Player 빌드에서 제거해 개발 도구가 Android 런타임에 포함되지 않도록 했습니다.
+
+---
+
+## 저장 데이터 원칙
+
+- 세이브는 `PlayerSaveData`를 JSON으로 직렬화해 로컬 `PlayerPrefs`에 저장합니다.
+- 기존 필드는 이름과 타입을 유지하고 신규 필드는 클래스 끝에 추가합니다.
+- 런 전용 데이터와 영구 데이터를 분리해 런 종료 시 임시 효과가 남지 않게 합니다.
+- 결제 거래 ID, 캐릭터 해금, 스킬 트리, 일일 미션, 도감과 최고 기록을 영구 데이터로 관리합니다.
+- Remote Config 캐시는 별도 키로 저장해 온라인 접속 실패 시 마지막 정상값을 사용합니다.
+
+> 현재 클라우드 세이브는 사용하지 않습니다. 네트워크 실패 시에도 로컬 저장과 플레이가 유지됩니다.
+
+---
+
+## 프로젝트 구조
+
+```text
+Assets/
+├─ Project/
+│  ├─ CoreData/                 # 씬 간 세션 데이터
+│  ├─ Save/                     # 로컬 저장 데이터와 SaveManager
+│  ├─ ScriptableObjects/        # Character · Enemy · Augment · Stage 데이터 정의
+│  └─ Scripts/
+│     ├─ Boss/                  # 보스 패턴 컴포넌트
+│     ├─ Combat/                # 이벤트 · 콤보 · 히트 피드백
+│     ├─ Managers/              # 전투·씬·서비스 관리자
+│     ├─ Roguelike/             # RunFlow · RunState · 무한 모드
+│     ├─ Services/              # UGS · Remote Config · Analytics
+│     ├─ Tutorial/              # 행동 기반 전투 튜토리얼
+│     └─ UI/                    # 로비·HUD·랭킹·Safe Area
+├─ AddressableAssetsData/       # Addressables 그룹·라벨 설정
+├─ Localization/               # 한국어·영어 String Table
+└─ Plugins/                    # Android 및 외부 SDK 설정
+```
+
+---
+
+<details>
+<summary><strong>브랜치·커밋 규칙</strong></summary>
+
+### 브랜치
+
+```mermaid
+flowchart LR
+    A[feature/*] --> B[develop]
+    B --> C[release]
+    C --> D[main]
+```
+
+- `main`: 배포 기준
+- `release`: 출시 준비와 최종 검증
+- `develop`: 기능 통합
+- `feature/*`: 기능 단위 작업
+
+### 커밋 메시지
+
+- `Feat`: 기능 추가
+- `Fix`: 버그 수정
+- `Design`: UI 디자인 변경
+- `HOTFIX`: 치명적 오류 긴급 수정
+- `Docs`: 문서 수정
+- `Refactor`: 코드 구조 개선
+- `Test`: 테스트 코드·도구 추가
+- `Chore`: 빌드·패키지 설정 변경
+- `Rename`: 파일·폴더 이동
+- `Remove`: 파일 삭제
+
+</details>
+
+---
+
 <div align="center">
 
-Animal Ball Fighter
-Unity 6 / Android
+### Animal Ball Fighter
+
+Unity 6 · Android · Version 0.2.0  
+Developed by **강한결**
+
 </div>
